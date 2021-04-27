@@ -6,7 +6,7 @@ from skimage.measure import regionprops, label
 from skimage.color import rgb2gray
 from scipy.stats import kurtosis
 from sklearn.cluster import KMeans
-import seaborn
+import copy as cp
 
 
 def mean(data):
@@ -90,16 +90,16 @@ def k_best(statVals, x1, x2, y1, y2):
     return k_max
 
 
-def afid_identifier(im1, im2, bw, k=20, corr=-0.6, kAuto=1):
+def afid_identifier(im1, im2, bw, k=20, corr=-0.6, kAuto=1, min_area=8):
     # Classify autofluorescence
     labels = label(bw, connectivity=2)
     im1PixelsStruct = regionprops(labels, im1)
     im2PixelsStruct = regionprops(labels, im2)
     pixelsStruct = regionprops(labels, bw)
     index = 0
-    min_area = 20
     # max_area = 2000
     while index != len(im1PixelsStruct):
+        # filtering regions with little area
         if im1PixelsStruct[index].area < min_area or im2PixelsStruct[index].area < min_area or pixelsStruct[
             index].area < min_area:
             pixels = pixelsStruct[index].coords
@@ -117,6 +117,7 @@ def afid_identifier(im1, im2, bw, k=20, corr=-0.6, kAuto=1):
     corr_vals = []
     # Correlation
     for index in range(objCount):
+        # delete null pexels
         im1PixelVals = im1PixelsStruct[index].intensity_image
         im1PixelVals = np.reshape(im1PixelVals, (-1, 1), order='F')
         im1PixelVals_buf = []
@@ -134,6 +135,11 @@ def afid_identifier(im1, im2, bw, k=20, corr=-0.6, kAuto=1):
                 im2PixelVals_buf.append(im2PixelVals[i, :][0])
         im2PixelVals = np.array(im2PixelVals_buf)
         im2PixelVals = np.reshape(im2PixelVals, (-1, 1))
+        if len(im1PixelVals) != len(im2PixelVals) :
+            corr_vals.append(0)
+            continue
+        im1PixelVals = im1PixelVals.astype(float)
+        im2PixelVals = im2PixelVals.astype(float)
         corr_val = np.corrcoef(im1PixelVals, im2PixelVals, rowvar=False)[0, 1]
         corr_vals.append(corr_val)
 
@@ -163,6 +169,8 @@ def afid_identifier(im1, im2, bw, k=20, corr=-0.6, kAuto=1):
             im2PixelVals = np.array(im2PixelVals_buf)
             im2PixelVals = np.reshape(im2PixelVals, (-1, 1))
 
+            im1PixelVals = im1PixelVals.astype(float)
+            im2PixelVals = im2PixelVals.astype(float)
             std1Vals.append(np.std(im1PixelVals))
             std2Vals.append(np.std(im2PixelVals))
             kurt1Vals.append(kurtosis(im1PixelVals, fisher=False))
@@ -335,8 +343,8 @@ def afid_identifier(im1, im2, bw, k=20, corr=-0.6, kAuto=1):
                 count_changes += 1
 
     print(count_changes)
-    im1AFRemoved = im1
+    im1AFRemoved = cp.copy(im1)
     im1AFRemoved[maskAF == 0] = 0
-    im2AFRemoved = im2
+    im2AFRemoved = cp.copy(im2)
     im2AFRemoved[maskAF == 0] = 0
     return maskAF, im1AFRemoved, im2AFRemoved, kBest
