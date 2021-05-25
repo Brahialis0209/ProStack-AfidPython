@@ -176,7 +176,7 @@ def glow_identifier(im1, im2, maskAF, trace_sensitivity=20, sigma=2):
     im2_glow_removed[glow2 == 0] = 0
 
     im1_res_removed[maskAF != 0] = 0
-    im1_res_removed[glow1 != 0 ] = 0
+    im1_res_removed[glow1 != 0] = 0
     im2_res_removed[maskAF != 0] = 0
     im2_res_removed[glow2 != 0] = 0
     return glow1, glow2, im1_glow_removed, im2_glow_removed, im1_res_removed, im2_res_removed

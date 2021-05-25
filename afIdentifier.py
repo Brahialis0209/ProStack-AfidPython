@@ -333,9 +333,33 @@ def afid_identifier(im1, im2, bw, k=20, corr=-0.6, kAuto=1, min_area=8):
 
 
     count_changes = 0
+    # mean_values1 = []
+    # mean_values2 = []
     for index in range(objCount):
         pixels = pixelsStruct[index].coords
         if afIdx[index] == 0:
+            # pixel_vals1 = im1PixelsStruct[index].intensity_image
+            # pixel_vals1 = np.reshape(pixel_vals1, (-1, 1), order='F')
+            # pixel_vals_buf1 = []
+            # for i in range(pixel_vals1.shape[0]):
+            #     if pixel_vals1[i, :] != 0:
+            #         pixel_vals_buf1.append(pixel_vals1[i, :][0])
+            # pixel_vals1 = np.array(pixel_vals_buf1)
+            # pixel_vals1 = np.reshape(pixel_vals1, (-1, 1))
+            # mean_value1 = np.mean(pixel_vals1)
+            # mean_values1.append(mean_value1)
+            #
+            # pixel_vals2 = im2PixelsStruct[index].intensity_image
+            # pixel_vals2 = np.reshape(pixel_vals2, (-1, 1), order='F')
+            # pixel_vals_buf2 = []
+            # for i in range(pixel_vals2.shape[0]):
+            #     if pixel_vals2[i, :] != 0:
+            #         pixel_vals_buf2.append(pixel_vals2[i, :][0])
+            # pixel_vals2 = np.array(pixel_vals_buf2)
+            # pixel_vals2 = np.reshape(pixel_vals2, (-1, 1))
+            # mean_value2 = np.mean(pixel_vals2)
+            # mean_values2.append(mean_value2)
+
             for pixel in pixels[:, :]:
                 x = pixel[0]
                 y = pixel[1]
@@ -347,4 +371,6 @@ def afid_identifier(im1, im2, bw, k=20, corr=-0.6, kAuto=1, min_area=8):
     im1AFRemoved[maskAF == 0] = 0
     im2AFRemoved = cp.copy(im2)
     im2AFRemoved[maskAF == 0] = 0
+    # mean_value1 = np.mean(mean_values1) / 4
+    # mean_value2 = np.mean(mean_values2) / 4
     return maskAF, im1AFRemoved, im2AFRemoved, kBest
