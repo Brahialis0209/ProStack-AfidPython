@@ -1,0 +1,19 @@
+INSERT OR REPLACE INTO Packages (Name, Version)  VALUES ('PCKUPD','1.0.0');
+INSERT OR REPLACE INTO Operators (name, implementor, executable, type, inputs, outputs, uidescription, message, metaname, metaweight, Segmentation, Detect_edges, Edges) VALUES ('afid','IM','afid', 1, "tif,tif", "tif,tif", '6;
+noise delete coefficient;double;0.7;
+kAuto;int;0;
+k;int;6;
+min area;int;7;
+corr;double;0.3;
+trace_sensitivity;int;20;
+
+--noise_del_cf $1 --kAuto $2 --k $3 --min_area $4 --corr $5 --trace_sensitivity $6;', 'This algorithm is an autofluorescence detection and removal tool.
+
+INPUT
+1 image:.tif
+2 image:.tif
+OUTPUT
+1 image:.tif
+2 image:.tif
+PARAMETERS
+Этот алгоритм состоит из двух частей. В первой части используется кластеризация характеристик (стандартное отклонение, эксцесс и взаимная корреляция) для поиска и удаления автофлуоресценции. Если kAuto равно 0 и k больше единицы, то выбирается кластер с наибольшей средней взаимной корреляцией регионов. Если kAuto равно 0, а k равно единице, то область считается автофлуоресценцией, если взаимная корреляция значений пикселей в обоих каналах больше, чем corr. Если kAuto равно 1, то количество кластеров выбирается автоматически, (Внимание !!!) k в этом случае должно быть равно единице. Во второй части алгоритма найденные области расширяются до 1 части. Параметр trace_sensitivity отвечает за частоту точек, из которых происходит расширение. Параметр «Коэффициент удаления шума» нужен для предварительной обработки входных данных - удаления фона. Чем выше значение параметра, тем строже удаление.', 'afid', 2, 1, 1, 1);

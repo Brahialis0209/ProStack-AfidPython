@@ -1,0 +1,19 @@
+INSERT OR REPLACE INTO Packages (Name, Version)  VALUES ('PCKUPD','1.0.0');
+INSERT OR REPLACE INTO Operators (name, implementor, executable, type, inputs, outputs, uidescription, message, metaname, metaweight, Segmentation, Detect_edges, Edges) VALUES ('afid','IM','afid', 1, "tif,tif", "tif,tif", '6;
+noise delete coefficient;double;0.7;
+kAuto;int;0;
+k;int;6;
+min area;int;7;
+corr;double;0.3;
+trace_sensitivity;int;20;
+
+--noise_del_cf $1 --kAuto $2 --k $3 --min_area $4 --corr $5 --trace_sensitivity $6;', 'This algorithm is an autofluorescence detection and removal tool.
+
+INPUT
+1 image:.tif
+2 image:.tif
+OUTPUT
+1 image:.tif
+2 image:.tif
+PARAMETERS
+This algorithm has two parts. The first part uses clustering of characteristics (standard deviation, kurtosis, and cross-correlation) to find and remove autofluorescence. If kAuto is 0 and k is greater than one, then the cluster with the largest mean cross-correlation of regions is selected. If kAuto is 0 and k is one, then the region is considered autofluorescence if the cross-correlation of pixel values ​​in both channels is greater than corr. If kAuto is equal to 1, then the number of clusters is automatically selected, (Attention !!!) k in this case must be equal to one. In the second part of the algorithm, the found regions are expanded into 1 part. The trace_sensitivity parameter is responsible for the frequency of points from which the expansion occurs. The noise delete coefficient parameter is needed for preprocessing the input data - removing the background. The higher the parameter value, the stricter the deletion.', 'afid', 2, 1, 1, 1);
