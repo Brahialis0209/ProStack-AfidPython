@@ -1,14 +1,9 @@
 import math
-
 from skimage.morphology import skeletonize as sk
-from skimage import morphology, filters
-import matplotlib.pyplot as plt
-from skimage.io import imsave
 import copy as cp
 import numpy as np
 from skimage.measure import regionprops, label
 import cv2
-from skimage import io
 from math import ceil, acos, pi, floor
 
 
@@ -37,7 +32,7 @@ def glow_identifier(im1, im2, maskAF, trace_sensitivity=20, sigma=2):
                 if sum(neighbours) < 2:
                     end_nodes[r][c] = 255
                     count += 1
-    print('un_nul end_nodes elements = ', count)
+    # print('un_nul end_nodes elements = ', count)
     count = 0
     labels = label(skel_af, connectivity=2)
     max_intensiv_skel = []
@@ -45,7 +40,7 @@ def glow_identifier(im1, im2, maskAF, trace_sensitivity=20, sigma=2):
     with_node = skel_af_pixels_struct
     for region in skel_af_pixels_struct:
         max_intensiv_skel.append(region.max_intensity)
-    print('len_max_intensiv_skel = ', len(max_intensiv_skel))
+    # print('len_max_intensiv_skel = ', len(max_intensiv_skel))
     skeleton_pixel_idx = regionprops(labels, skel_af)
     region_count = len(skeleton_pixel_idx)
     for index in range(region_count):
@@ -55,7 +50,7 @@ def glow_identifier(im1, im2, maskAF, trace_sensitivity=20, sigma=2):
             y = pixels[0, 1]
             end_nodes[x][y] = 255
             count += 1
-    print(count)
+    # print(count)
     trace = cp.copy(end_nodes)
     exp_points = cp.copy(end_nodes)
     done = [[0 for _ in range(n)] for _ in range(m)]
@@ -92,9 +87,9 @@ def glow_identifier(im1, im2, maskAF, trace_sensitivity=20, sigma=2):
             break
         if trace_count > 40:
             break
-    print('exp_count = ', exp_count)
-    print('trace_count  = ', trace_count)
-    print('new_tr_count  = ', new_tr_count)
+    # print('exp_count = ', exp_count)
+    # print('trace_count  = ', trace_count)
+    # print('new_tr_count  = ', new_tr_count)
     # imsave(examples_path + "exp_points.png", exp_points)
     # exp_points = io.imread(examples_path + 'exp_points.png')
     if sigma > 0:
@@ -163,9 +158,9 @@ def glow_identifier(im1, im2, maskAF, trace_sensitivity=20, sigma=2):
                         extend_length += 1
                     th_multiple += 1
 
-    print('unnul_exp_point_elemetns_end = ', unnul_exp_point_elemetns_end)
-    print('count_glow1_255 = ', count1)
-    print('count2glow2_255 = ', count2)
+    # print('unnul_exp_point_elemetns_end = ', unnul_exp_point_elemetns_end)
+    # print('count_glow1_255 = ', count1)
+    # print('count2glow2_255 = ', count2)
     im1_res_removed = cp.copy(im1)
     im2_res_removed = cp.copy(im2)
     im1_glow_removed = cp.copy(im1)

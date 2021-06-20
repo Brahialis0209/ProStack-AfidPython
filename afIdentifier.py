@@ -366,7 +366,7 @@ def afid_identifier(im1, im2, bw, k=20, corr=-0.6, kAuto=1, min_area=8):
                 maskAF[x, y] = 0
                 count_changes += 1
 
-    print(count_changes)
+    # print(count_changes)
     im1AFRemoved = cp.copy(im1)
     im1AFRemoved[maskAF == 0] = 0
     im2AFRemoved = cp.copy(im2)
